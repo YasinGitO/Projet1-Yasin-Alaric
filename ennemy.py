@@ -1,5 +1,9 @@
-class Ennemy:
-    pass
+from entity import Entity
+
+
+class Ennemy(Entity):
+    def __init__(self, x, y):
+        super().__init__(x, y, 1, 3)
 # certains ennemis auront plus de vie que d'autres et apporteront plus de points lors de son kill
 # variables
 # enemyImg = []  TODO : trouver des nouvelles images pour les ennemis
