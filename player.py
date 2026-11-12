@@ -8,12 +8,13 @@ class Player(Entity):
 
     def __init__(self, game, name):
         super().__init__(x=370, y=480, hp=3, speed=5)
-        self.image = pygame.image.load('image/player.png')
+        self.image = pygame.image.load('image/Main Ship - Base - Full health.png').convert_alpha()
+        self.image = pygame.transform.scale(self.image, (100, 100))
 
         self.game = game
         self.name = name
         self.score = 0
-        self.weapon = Arme(1,1,250,1)
+        self.weapon = Arme(1,1,100,1)
         self.direction_x = 0
 
 
@@ -56,6 +57,9 @@ class Player(Entity):
         :return: taille de l'axe x de la fenêtre de jeu.
         """
         return self.game.get_screen_size()[0]
+
+    def get_player_width_y(self):
+        return self.image.get_height()
 
     def update(self):
         """
@@ -105,7 +109,7 @@ class Player(Entity):
             self.direction_x = -self.speed
         if keys[pygame.K_RIGHT]:
             self.direction_x = self.speed
-        if keys[pygame.SPACE]:
+        if keys[pygame.K_SPACE]:
             self.shoot()
 
 # playerImg = pygame.image.load('image/player.png')

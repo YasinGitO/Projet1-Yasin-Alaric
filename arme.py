@@ -4,7 +4,7 @@ from bullet import Bullet
 
 class Arme:
 
-    def __init__(self, type, damage=1, cooldown=250, zone=1):
+    def __init__(self, type, damage=1, cooldown=100000000000, zone=1):
         self.type = type
         self.damage = damage
         self.zone = zone
@@ -25,7 +25,7 @@ class Arme:
         self.bulletSound.play()
 
     def update(self):
-        for bullet in self.shooted_bullets:
+        for bullet in self.shooted_bullets[:]:
             bullet.update()
             if bullet.is_out_of_screen():
                 self.shooted_bullets.remove(bullet)
