@@ -1,9 +1,45 @@
+import pygame
+
 from entity import Entity
 
-
 class Ennemy(Entity):
-    def __init__(self, x, y):
-        super().__init__(x, y, 1, 3)
+    def __init__(self, x, y, hp=1, speed=3, damage=1, game=None):
+        super().__init__(x, y, hp, speed)
+        self.damage = damage
+        self.image = pygame.image.load('image/enemy.png')
+        self.game = game
+
+    def update(self):
+        min_x = 0
+        max_x = self.game.get_screen_size()[0] - self.image.get_width()
+        self.coordinate.move(dx=self.speed)
+        if self.coordinate.getX() > max_x:
+            self.coordinate.clamp_x(min_x, max_x)
+            self.speed = -self.speed
+            self.coordinate.setY(self.coordinate.getY() + 75)
+        if self.coordinate.getX() < 0:
+            self.coordinate.clamp_x(min_x, max_x)
+            self.speed = abs(self.speed)
+            self.coordinate.setY(self.coordinate.getY() + 75)
+
+
+    def draw(self, screen):
+        screen.blit(self.image, self.coordinate.get_tuple())
+
+    def is_out_of_screen(self):
+        return self.coordinate.getX() + self.image.get_width() < 0
+    def get_damage(self):
+        return self.damage
+    def get_speed(self):
+        return self.speed
+    def get_hp(self):
+        return self.hp
+    def touch_ennemy(self, player):
+        if player.get_player_width_y() > self.image.get_height():
+            player.take_damage(self.damage)
+
+
+
 # certains ennemis auront plus de vie que d'autres et apporteront plus de points lors de son kill
 # variables
 # enemyImg = []  TODO : trouver des nouvelles images pour les ennemis

@@ -53,11 +53,14 @@ class Entity:
 
     def draw(self, screen):
         """
-
-        :param screen:
-        :return:
+        Cette méthode va dessiner l'image choisie aux coordonnées de l'objet.
+        :param screen: Surface de jeu.
         """
         screen.blit(self.image, self.coordinate.get_tuple())
 
     def take_damage(self, damage):
+        """
+        Cette méthode va retirer la valeur de damage de la vie de l'objet.
+        :param damage: Les dégats qu'on veut affliger à l'objet.
+        """
         self.hp -= damage
