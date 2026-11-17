@@ -34,10 +34,31 @@ class Ennemy(Entity):
         return self.speed
     def get_hp(self):
         return self.hp
+    def get_rect(self):
+        x, y = self.coordinate.get_tuple()
+        return pygame.Rect(x, y, self.image.get_width(), self.image.get_height())
+
+    def is_hit_by(self, bullet):
+        """
+        Retourne True si la balle touche cet ennemi.
+        """
+        return self.get_rect().colliderect(bullet.get_rect())
+
     def touch_ennemy(self, player):
         if player.get_player_width_y() > self.image.get_height():
             player.take_damage(self.damage)
 
+
+
+class EnnemiTank(Ennemy):
+    """
+    Nouveau type de monstre : plus lent, plus gros en points de vie (3 balles pour le tuer)
+    mais il fait plus de dégâts.
+    """
+    def __init__(self, x, y, game=None):
+        super().__init__(x, y, hp=3, speed=2, damage=2, game=game)
+        self.image = pygame.image.load('image/ufo.png')
+        self.image = pygame.transform.scale(self.image, (64, 64))
 
 
 # certains ennemis auront plus de vie que d'autres et apporteront plus de points lors de son kill

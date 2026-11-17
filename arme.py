@@ -21,7 +21,7 @@ class Arme:
             return
 
         self.last_shot = current_time
-        self.shooted_bullets.append(Bullet(start_x, start_y))
+        self.shooted_bullets.append(Bullet(start_x, start_y, self.damage))
         self.bulletSound.play()
 
     def update(self):

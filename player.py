@@ -58,6 +58,14 @@ class Player(Entity):
         """
         return self.game.get_screen_size()[0]
 
+    def get_rect(self):
+        """
+        Cette méthode retourne le rectangle occupé par le joueur (pour les collisions).
+        :return: pygame.Rect du joueur.
+        """
+        x, y = self.coordinate.get_tuple()
+        return pygame.Rect(x, y, self.image.get_width(), self.image.get_height())
+
     def get_player_width_y(self):
         return self.image.get_height()
 
