@@ -3,9 +3,10 @@ import pygame
 from entity import Entity
 
 class Ennemy(Entity):
-    def __init__(self, x, y, hp=1, speed=3, damage=1, game=None):
+    def __init__(self, x, y, hp=1, speed=3, damage=1, game=None, points=1):
         super().__init__(x, y, hp, speed)
         self.damage = damage
+        self.points = points  # points gagnés par le joueur quand l'ennemi est tué
         self.image = pygame.image.load('image/enemy.png')
         self.game = game
 
@@ -30,6 +31,8 @@ class Ennemy(Entity):
         return self.coordinate.getX() + self.image.get_width() < 0
     def get_damage(self):
         return self.damage
+    def get_points(self):
+        return self.points
     def get_speed(self):
         return self.speed
     def get_hp(self):
@@ -56,7 +59,7 @@ class EnnemiTank(Ennemy):
     mais il fait plus de dégâts.
     """
     def __init__(self, x, y, game=None):
-        super().__init__(x, y, hp=3, speed=2, damage=2, game=game)
+        super().__init__(x, y, hp=3, speed=2, damage=2, game=game, points=2)
         self.image = pygame.image.load('image/ufo.png')
         self.image = pygame.transform.scale(self.image, (64, 64))
 

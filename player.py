@@ -1,6 +1,6 @@
 import pygame.image
 import coordinate
-from arme import Arme
+from arme import creer_arme
 from entity import Entity
 
 
@@ -14,7 +14,7 @@ class Player(Entity):
         self.game = game
         self.name = name
         self.score = 0
-        self.weapon = Arme(1,1,100,1)
+        self.weapon = creer_arme("Pistolet")
         self.direction_x = 0
 
 
@@ -98,11 +98,23 @@ class Player(Entity):
     def add_score(self, score):
         self.score += score
 
+    def change_weapon(self, nouvelle_arme):
+        """
+        Cette méthode remplace l'arme du joueur. Les balles déjà tirées continuent leur chemin.
+        :param nouvelle_arme: La nouvelle arme (instance de Arme).
+        """
+        nouvelle_arme.shooted_bullets = self.weapon.shooted_bullets
+        self.weapon = nouvelle_arme
+
     def shoot(self):
         """
-        Cette méthode va utiliser l'arme du joueur pour tirer un projectile depuis la position du joueur.
+        Cette méthode va utiliser l'arme du joueur pour tirer un projectile depuis le milieu du vaisseau.
+        Quand l'arme n'a plus de munitions, on revient au Pistolet.
         """
-        self.weapon.shoot(self.get_x(), self.get_y())
+        centre_x = self.get_x() + self.get_player_width() // 2
+        self.weapon.shoot(centre_x, self.get_y())
+        if self.weapon.is_empty():
+            self.change_weapon(creer_arme("Pistolet"))
 
     def handle_input(self):
         """
