@@ -44,7 +44,7 @@ Le diagramme ci-dessous est rendu directement par GitHub via **Mermaid** :
 
 ```mermaid
 classDiagram
-    direction TB
+    direction LR
 
     namespace Moteur {
         class Main {
@@ -158,3 +158,70 @@ classDiagram
     Entity *-- "1" Coordinate
     Bullet *-- "1" Coordinate
     PowerUp *-- "1" Coordinate
+    Bullet *-- "1" Coordinate
+    PowerUp *-- "1" Coordinate
+```
+
+---
+
+## Structure du dépôt
+
+```text
+Projet1-Yasin-Alaric/
+├── main.py          # Point d'entrée (classe Main) et boucle principale du jeu
+├── game.py          # Moteur de jeu (classe Game), règles, collisions, spawns et HUD
+├── entity.py        # Classe mère Entity (vie, position, affichage, dégâts)
+├── player.py        # Classe Player (déplacements, score, gestion des entrées et de l'arme)
+├── ennemy.py        # Classes Ennemy et EnnemiTank
+├── arme.py          # Classe Arme, configuration ARMES et fabrique creer_arme()
+├── bullet.py        # Classe Bullet (projectiles tirés par les armes)
+├── powerup.py       # Classe PowerUp (bonus d'armes lâchés par les ennemis)
+├── coordinate.py    # Classe Coordinate (gestion et bornage des positions 2D)
+├── image/           # Sprites et arrière-plans (.png)
+├── sounds/          # Effets sonores et musique (.wav)
+├── requirements.txt # Dépendances Python du projet
+└── README.md        # Documentation du projet
+```
+---
+
+## Installation et lancement
+
+### Prérequis
+- **Python 3.10+**
+- **Pygame** (ou `pygame-ce`)
+
+### Étapes
+1. Cloner le dépôt :
+   ```bash
+   git clone [https://github.com/YasinGitO/Projet1-Yasin-Alaric.git](https://github.com/YasinGitO/Projet1-Yasin-Alaric.git)
+   cd Projet1-Yasin-Alaric
+   ```
+2. Installer les dépendances :
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Lancer le jeu :
+   ```bash
+   python main.py
+   ```
+
+---
+
+## Contrôles
+
+| Touche | Action |
+| :--- | :--- |
+| `Flèche Gauche` (`←`) | Déplacer le vaisseau vers la gauche |
+| `Flèche Droite` (`→`) | Déplacer le vaisseau vers la droite |
+| `Espace` | Tirer avec l'arme équipée |
+| `Fermer la fenêtre` | Quitter le jeu |
+
+---
+
+## Auteurs
+
+- **Yasin Ozlu**
+- **Alaric Dehard**
+
+
+
