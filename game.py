@@ -4,30 +4,44 @@ import pygame
 
 from arme import creer_arme
 from ennemy import Ennemy, EnnemiTank
-from player import Player
 from powerup import PowerUp
+
+# --- Configuration & Équilibrage ---
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+
+SPAWN_DELAY_INITIAL = 2000   # délai de départ entre 2 apparitions d'ennemis (ms)
+SPAWN_DELAY_MIN = 400        # délai minimum, quel que soit le score (ms)
+SPAWN_DELAY_STEP = 25        # millisecondes gagnées par point de score
+
+TANK_CHANCE = 0.25           # 25% de chance d'avoir un tank
+POWERUP_CHANCE = 0.2         # 20% de chance qu'un ennemi mort laisse un power-up
+
+DEFAULT_BACKGROUND = 'image/background.png'
+LEVEL_MUSIC = {1: "sounds/background.wav"}
 
 
 class Game:
     def __init__(self):
+        # État de la partie
         self.players = []
         self.ennemies = []
         self.powerups = []
-        self.spawn_delay = 2000      # délai de départ entre 2 apparitions d'ennemis (ms)
-        self.spawn_delay_min = 400   # délai minimum, quel que soit le score (ms)
-        self.spawn_delay_step = 25   # millisecondes gagnées par point de score
-        self.last_spawn = 0
-        self.tank_chance = 0.25      # 25% de chance d'avoir un tank
-        self.powerup_chance = 0.2    # 20% de chance qu'un ennemi mort laisse un power-up
         self.level = 1
-        pygame.init()
-        self.screen = pygame.display.set_mode((800, 600))
+        self.last_spawn = 0
         self.running = True
         self.game_over = False
+
+        # Initialisation graphique / moteur
+        self._init_pygame()
+
+    def _init_pygame(self):
+        """Initialise la fenêtre, les polices et les ressources de base."""
+        pygame.init()
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.font = pygame.font.Font(None, 80)
         self.hud_font = pygame.font.Font(None, 30)
-        self.background = pygame.image.load('image/background.png')
-        self.level_music = {1: "sounds/background.wav"}
+        self.background = pygame.image.load(DEFAULT_BACKGROUND)
 
     def get_screen_size(self):
         return self.screen.get_size()
@@ -56,10 +70,10 @@ class Game:
     def spawn_ennemy(self):
         """
         Fait apparaitre un ennemi en haut de l'écran, à une position x aléatoire.
-        Avec une chance de tank_chance, c'est un tank.
+        Avec une chance de TANK_CHANCE, c'est un tank.
         """
         x = random.randint(0, self.get_screen_size()[0] - 64)
-        if random.random() < self.tank_chance:
+        if random.random() < TANK_CHANCE:
             ennemi = EnnemiTank(x, 0, self)
         else:
             ennemi = Ennemy(x, 0, 1, 3, 1, self)
@@ -69,10 +83,10 @@ class Game:
 
     def get_spawn_delay(self):
         """
-        Plus le score est élevé, plus le délai entre 2 ennemis est court (jusqu'à spawn_delay_min).
+        Plus le score est élevé, plus le délai entre 2 ennemis est court (jusqu'à SPAWN_DELAY_MIN).
         """
         score = sum(player.get_score() for player in self.players)
-        return max(self.spawn_delay_min, self.spawn_delay - score * self.spawn_delay_step)
+        return max(SPAWN_DELAY_MIN, SPAWN_DELAY_INITIAL - score * SPAWN_DELAY_STEP)
 
     def update_spawn(self):
         """
@@ -87,7 +101,7 @@ class Game:
         """
         Un ennemi qui meurt laisse parfois un power-up (arme au hasard) à l'endroit où il est mort.
         """
-        if random.random() < self.powerup_chance:
+        if random.random() < POWERUP_CHANCE:
             nom = random.choice(["Mitraillette", "Canon"])
             self.powerups.append(PowerUp(ennemi.get_x(), ennemi.get_y(), nom))
 
@@ -131,53 +145,3 @@ class Game:
         y = (self.get_screen_size()[1] - texte.get_height()) // 2
         self.screen.blit(texte, (x, y))
 
-
-
-def main():
-    game = Game()
-    joueur = Player(game, "Alaric")
-    game.players.append(joueur)
-    game.spawn_ennemy()
-    clock = pygame.time.Clock()
-    while game.running:
-        # RGB = Red, Green, Blue
-        game.screen.fill((0, 0, 0))
-        # Background Image
-        game.screen.blit(game.background, (0, 0))
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                game.running = False
-
-        if not game.game_over:
-            joueur.handle_input()
-            joueur.update()
-
-            game.update_spawn()
-            for ennemi in game.ennemies:
-                ennemi.update()
-            game.handle_collisions(joueur)
-            game.handle_powerups(joueur)
-            game.handle_player_collisions(joueur)
-
-        joueur.draw(game.screen)
-        for ennemi in game.ennemies:
-            ennemi.draw(game.screen)
-        for powerup in game.powerups:
-            powerup.draw(game.screen)
-        game.draw_hud(joueur)
-
-        if game.game_over:
-            game.draw_game_over()
-        pygame.display.flip()
-
-        clock.tick(60)
-
-
-
-if __name__ == "__main__":
-    main()
-
-
-# gérer victoire/défaite
-# niveaux
